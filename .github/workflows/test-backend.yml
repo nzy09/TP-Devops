@@ -3,25 +3,25 @@ name: Test Backend
 on:
   push:
     branches:
+      - main
       - develop
-      - master
   pull_request:
     branches:
+      - main
       - develop
-      - master
 
 jobs:
-  test-backend:
+  test-backend: 
     runs-on: ubuntu-22.04
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v2.5.0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Build and test with Maven
-        run: mvn clean verify --file ./simple-api/pom.xml
+        run: mvn clean -B verify sonar:sonar -Dsonar.projectKey=tp-devops-niziyang_tp1 -Dsonar.organization=tp-devops-niziyang -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  
+        working-directory: ./controller
