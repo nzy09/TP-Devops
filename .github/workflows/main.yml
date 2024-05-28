@@ -38,14 +38,18 @@ jobs:
         with:
           context: ./controller
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-simple-api:latest
+          push: ${{ github.ref == 'ref/heads/main' }}
 
       - name: Build image and push database
         uses: docker/build-push-action@v3
         with:
           context: ./postgres
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-database:latest
+          push: ${{ github.ref == 'ref/heads/main' }}
+
       - name: Build image and push httpd
         uses: docker/build-push-action@v3
         with:
           context: ./html
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-httpd:latest
+          push: ${{ github.ref == 'ref/heads/main' }}
