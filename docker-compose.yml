@@ -11,8 +11,7 @@ services:
       POSTGRES_DB: db
       POSTGRES_USER: usr
       POSTGRES_PASSWORD: pwd
-    ports:
-      - "5432:5432"
+  
     networks:
       - app-network
 
@@ -33,8 +32,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/db
       SPRING_DATASOURCE_USERNAME: usr
       SPRING_DATASOURCE_PASSWORD: pwd
-    ports:
-      - "8082:8080"
+    
     networks:
       - app-network
     depends_on:
@@ -44,10 +42,9 @@ services:
     build: ./html
     container_name: my_apache_container
     ports:
-      - "8080:80"
+      - "80:80"
     networks:
       - app-network
     depends_on:
       - backend
-    volumes:
-      - ./html:/httpd.conf
+ 
