@@ -1,0 +1,53 @@
+version: '3.8'
+
+networks:
+  app-network:
+
+services:
+  postgres_db:
+    build: ./postgres
+    container_name: my_postgres_container
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  adminer:
+    image: adminer
+    container_name: my_adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres_db
+    ports:
+      - "8081:8080" 
+    networks:
+      - app-network
+
+  backend:
+    build: ./controller
+    container_name: my_spring_boot_app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/db
+      SPRING_DATASOURCE_USERNAME: usr
+      SPRING_DATASOURCE_PASSWORD: pwd
+    ports:
+      - "8082:8080"
+    networks:
+      - app-network
+    depends_on:
+      - postgres_db
+
+  httpd:
+    build: ./html
+    container_name: my_apache_container
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    volumes:
+      - ./html:/httpd.conf
